@@ -29,6 +29,9 @@ BUILT_IN_DEFAULTS = {
 # instead of mixing them with BUILT_IN_DEFAULTS
 # These can be use to override BUILT_IN_DEFAULTS as well
 APP_DEFAULTS = {
+	'slack': {
+		'base_url': 'https://slack.com/api/'
+	}
 }
 
 BUILT_IN_DEFAULTS.update(APP_DEFAULTS)

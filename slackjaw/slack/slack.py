@@ -1,28 +1,18 @@
 import websocket
 import requests
-from .util.config import config
-from .util.log import getLogger
+from ..util.config import config
+from ..util.log import getLogger
+from .util import call_method
 from queue import Queue, Empty
 from threading import Event, Thread
 import json
 
 _log = getLogger('slack')
 
-def build_url(method):
-	return 'https://slack.com/api/' + method
-
-def reqOk(resp):
-	if resp.json() and resp.json().get('ok'):
-		return True
-	return False
-
-def call_method(token, method, **kwargs):
-	kwargs['token'] = token
-	resp = requests.post(build_url(method), data = kwargs)
-	print(resp.json())
-	return reqOk(resp), resp.json()
-
 class WSocket(Thread):
+	'''
+		Simple wrapper thread to background a websocket connection
+	'''
 	def __init__(self, ws, connected):
 		self._connected = connected
 		self._ws = ws
@@ -39,7 +29,7 @@ class WSocket(Thread):
 		self._ws.close()
 		super().join()
 
-class SlackClient:
+class RTMClient:
 	def __init__(self, token):
 		self._token = token
 		self._ws_url = None
@@ -98,4 +88,4 @@ class SlackClient:
 		self._ws.close()
 
 	def as_user(self, token):
-		return SlackClient(token)
+		return RTMClient(token)
